@@ -1,0 +1,17 @@
+$strComputer = "."
+$objWMIService = GetObject("winmgmts:\\"+ $strComputer + "\root\cimv2")
+$colItems = $objWMIService.ExecQuery("Select * from Win32_Product")
+For Each $objItem in $colItems
+    ? "Caption:" + $objItem.Caption
+    ? "Description:" + $objItem.Description
+    ? "Identifying Number:" + $objItem.IdentifyingNumber
+    ? "Install Date:" + $objItem.InstallDate
+    ? "Install Date 2:" + $objItem.InstallDate2
+    ? "Install Location:" + $objItem.InstallLocation
+    ? "Install State:" + $objItem.InstallState
+    ? "Name:" + $objItem.Name
+    ? "Package Cache:" + $objItem.PackageCache
+    ? "SKU Number:" + $objItem.SKUNumber
+    ? "Vendor:" + $objItem.Vendor
+    ? "Version:" + $objItem.Version
+Next

@@ -1,0 +1,47 @@
+$strComputer = "."
+$objWMIService = GetObject("winmgmts:\\"+ $strComputer + "\root\cimv2")
+$colItems = $objWMIService.ExecQuery("Select * from Win32_LogicalDisk")
+For Each $objItem in $colItems
+    ? "Access:" + $objItem.Access
+    ? "Availability:" + $objItem.Availability
+    ? "Block Size:" + $objItem.BlockSize
+    ? "Caption:" + $objItem.Caption
+    ? "Compressed:" + $objItem.Compressed
+    ? "Config Manager Error Code:" + $objItem.ConfigManagerErrorCode
+    ? "Config Manager User Config:" + $objItem.ConfigManagerUserConfig
+    ? "Creation Class Name:" + $objItem.CreationClassName
+    ? "Description:" + $objItem.Description
+    ? "Device ID:" + $objItem.DeviceID
+    ? "Drive Type:" + $objItem.DriveType
+    ? "Error Cleared:" + $objItem.ErrorCleared
+    ? "Error Description:" + $objItem.ErrorDescription
+    ? "Error Methodology:" + $objItem.ErrorMethodology
+    ? "File System:" + $objItem.FileSystem
+    ? "Free Space:" + $objItem.FreeSpace
+    ? "Install Date:" + $objItem.InstallDate
+    ? "Last Error Code:" + $objItem.LastErrorCode
+    ? "Maximum Component Length:" + $objItem.MaximumComponentLength
+    ? "Media Type:" + $objItem.MediaType
+    ? "Name:" + $objItem.Name
+    ? "Number Of Blocks:" + $objItem.NumberOfBlocks
+    ? "PNP Device ID:" + $objItem.PNPDeviceID
+    For Each $x in $objItem.PowerManagementCapabilities
+        ? "Power Management Capabilities:" + $x
+    Next
+    ? "Power Management Supported:" + $objItem.PowerManagementSupported
+    ? "Provider Name:" + $objItem.ProviderName
+    ? "Purpose:" + $objItem.Purpose
+    ? "Quotas Disabled:" + $objItem.QuotasDisabled
+    ? "Quotas Incomplete:" + $objItem.QuotasIncomplete
+    ? "Quotas Rebuilding:" + $objItem.QuotasRebuilding
+    ? "Size:" + $objItem.Size
+    ? "Status:" + $objItem.Status
+    ? "Status Info:" + $objItem.StatusInfo
+    ? "Supports Disk Quotas:" + $objItem.SupportsDiskQuotas
+    ? "Supports File Based Compression:" + $objItem.SupportsFileBasedCompression
+    ? "System Creation Class Name:" + $objItem.SystemCreationClassName
+    ? "System Name:" + $objItem.SystemName
+    ? "Volume Dirty:" + $objItem.VolumeDirty
+    ? "Volume Name:" + $objItem.VolumeName
+    ? "Volume Serial Number:" + $objItem.VolumeSerialNumber
+Next

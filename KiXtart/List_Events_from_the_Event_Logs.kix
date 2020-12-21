@@ -1,0 +1,25 @@
+$strComputer = "."
+$objWMIService = GetObject("winmgmts:\\"+ $strComputer + "\root\cimv2")
+$colItems = $objWMIService.ExecQuery("Select * from Win32_NTLogEvent")
+For Each $objItem in $colItems
+    ? "Category:" + $objItem.Category
+    ? "Category String:" + $objItem.CategoryString
+    ? "Computer Name:" + $objItem.ComputerName
+    For Each $x in $objItem.Data
+        ? "Data:" + $x
+    Next
+    ? "Event Code:" + $objItem.EventCode
+    ? "Event Identifier:" + $objItem.EventIdentifier
+    ? "Event Type:" + $objItem.EventType
+    For Each $x in $objItem.InsertionStrings
+        ? "Insertion Strings:" + $x
+    Next
+    ? "Logfile:" + $objItem.Logfile
+    ? "Message:" + $objItem.Message
+    ? "Record Number:" + $objItem.RecordNumber
+    ? "Source Name:" + $objItem.SourceName
+    ? "Time Generated:" + $objItem.TimeGenerated
+    ? "Time Written:" + $objItem.TimeWritten
+    ? "Type:" + $objItem.Type
+    ? "User:" + $objItem.User
+Next

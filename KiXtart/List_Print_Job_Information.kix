@@ -1,0 +1,29 @@
+$strComputer = "."
+$objWMIService = GetObject("winmgmts:\\"+ $strComputer + "\root\cimv2")
+$colItems = $objWMIService.ExecQuery("Select * from Win32_PrintJob")
+For Each $objItem in $colItems
+    ? "Caption:" + $objItem.Caption
+    ? "Data Type:" + $objItem.DataType
+    ? "Description:" + $objItem.Description
+    ? "Document:" + $objItem.Document
+    ? "Driver Name:" + $objItem.DriverName
+    ? "Elapsed Time:" + $objItem.ElapsedTime
+    ? "Host Print Queue:" + $objItem.HostPrintQueue
+    ? "Install Date:" + $objItem.InstallDate
+    ? "Job Id:" + $objItem.JobId
+    ? "Job Status:" + $objItem.JobStatus
+    ? "Name:" + $objItem.Name
+    ? "Notify:" + $objItem.Notify
+    ? "Owner:" + $objItem.Owner
+    ? "Pages Printed:" + $objItem.PagesPrinted
+    ? "Parameters:" + $objItem.Parameters
+    ? "Print Processor:" + $objItem.PrintProcessor
+    ? "Priority:" + $objItem.Priority
+    ? "Size:" + $objItem.Size
+    ? "Start Time:" + $objItem.StartTime
+    ? "Status:" + $objItem.Status
+    ? "Status Mask:" + $objItem.StatusMask
+    ? "Time Submitted:" + $objItem.TimeSubmitted
+    ? "Total Pages:" + $objItem.TotalPages
+    ? "Until Time:" + $objItem.UntilTime
+Next

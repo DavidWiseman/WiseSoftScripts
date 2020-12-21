@@ -1,0 +1,42 @@
+$strComputer = "."
+$objWMIService = GetObject("winmgmts:\\"+ $strComputer + "\root\cimv2")
+$colItems = $objWMIService.ExecQuery("Select * from Win32_DiskPartition")
+For Each $objItem in $colItems
+    ? "Access:" + $objItem.Access
+    ? "Availability:" + $objItem.Availability
+    ? "Block Size:" + $objItem.BlockSize
+    ? "Bootable:" + $objItem.Bootable
+    ? "Boot Partition:" + $objItem.BootPartition
+    ? "Caption:" + $objItem.Caption
+    ? "Config Manager Error Code:" + $objItem.ConfigManagerErrorCode
+    ? "Config Manager User Config:" + $objItem.ConfigManagerUserConfig
+    ? "Creation Class Name:" + $objItem.CreationClassName
+    ? "Description:" + $objItem.Description
+    ? "Device ID:" + $objItem.DeviceID
+    ? "Disk Index:" + $objItem.DiskIndex
+    ? "Error Cleared:" + $objItem.ErrorCleared
+    ? "Error Description:" + $objItem.ErrorDescription
+    ? "Error Methodology:" + $objItem.ErrorMethodology
+    ? "Hidden Sectors:" + $objItem.HiddenSectors
+    ? "Index:" + $objItem.Index
+    ? "Install Date:" + $objItem.InstallDate
+    ? "Last Error Code:" + $objItem.LastErrorCode
+    ? "Name:" + $objItem.Name
+    ? "Number Of Blocks:" + $objItem.NumberOfBlocks
+    ? "PNP Device ID:" + $objItem.PNPDeviceID
+    For Each $x in $objItem.PowerManagementCapabilities
+        ? "Power Management Capabilities:" + $x
+    Next
+    ? "Power Management Supported:" + $objItem.PowerManagementSupported
+    ? "Primary Partition:" + $objItem.PrimaryPartition
+    ? "Purpose:" + $objItem.Purpose
+    ? "Rewrite Partition:" + $objItem.RewritePartition
+    ? "Size:" + $objItem.Size
+    ? "Starting Offset:" + $objItem.StartingOffset
+    ? "Status:" + $objItem.Status
+    ? "Status Info:" + $objItem.StatusInfo
+    ? "System Creation Class Name:" + $objItem.SystemCreationClassName
+    ? "System Name:" + $objItem.SystemName
+    ? "Type:" + $objItem.Type
+Next
+

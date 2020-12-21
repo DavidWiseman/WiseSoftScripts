@@ -1,0 +1,144 @@
+<html><head>
+<STYLE TYPE="text/css">
+	BODY {font-family: "Verdana, Arial, Helvetica, sans-serif";
+		font-size:x-small;
+		background-color:#dfe0e5;
+	}
+	
+	table {font-family: "Verdana, Arial, Helvetica, sans-serif";
+		font-size:x-small;}
+
+	#RestoreCompleted {
+		font-weight:bold;
+		color:green;
+	}
+
+	#RestoreInProgress {
+		font-weight:bold;
+		color:blue;
+	}
+
+	#RestoreError {
+		font-weight:bold;
+		color:red;
+	}
+	#Footer {
+	font-weight:bold;
+	font-size:10px;
+}
+
+</STYLE>
+
+<script language="vbscript" OnLoad="Main()">
+	option explicit
+	Const HKEY_LOCAL_MACHINE = &H80000002
+	Const adVarChar = 200
+	Const adParamInput = 1 
+	Const intAppWidth = 600
+	Const intAppHeight = 280 ' 255
+
+	' Set app size and centre screen on load
+	Sub Window_Onload()
+		Dim objWMIService,objItem,intHorizontal,intVertical
+		Dim intLeft, intTop
+       	 	Set objWMIService = GetObject("winmgmts:\\.\root\cimv2")
+        
+       		For Each objItem in objWMIService.ExecQuery("Select * From Win32_DesktopMonitor")
+            		intHorizontal = objItem.ScreenWidth
+            		intVertical = objItem.ScreenHeight
+        	Next
+        	If IsNull(intHorizontal) = False And IsNull(intVertical) = False Then
+        	        intLeft = (intHorizontal - intAppWidth) / 2
+		        	intTop = (intVertical - intAppHeight) / 2
+		       	 	window.moveTo intLeft, intTop
+       	 	End If
+       	 	window.resizeTo intAppWidth,intAppHeight
+        	
+
+		LoadSQLServerInstances()
+	End Sub
+	
+	' Populate list box with local SQL Server instances
+	Sub LoadSQLServerInstances()
+		Dim strComputer,strKeyPath,strValueName,strValue
+		Dim oReg,arrValues, d
+		
+		strComputer = "."
+
+		Set oReg=GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & _ 
+		    strComputer & "\root\default:StdRegProv")
+		 
+		strKeyPath = "SOFTWARE\Microsoft\Microsoft SQL Server\"
+		strValueName = "InstalledInstances"
+		oReg.GetMultiStringValue HKEY_LOCAL_MACHINE,strKeyPath, _
+		    strValueName,arrValues
+		If ISArray(arrValues) = false then
+			msgbox "No local SQL Server instances found",vbCritical
+			Close()
+		end If	
+		set d = createobject("Scripting.Dictionary")
+		For Each strValue In arrValues
+			Dim objOption
+		    Set objOption = Document.createElement("OPTION")
+			if strValue = "LOCAL" OR strValue="MSSQLSERVER" then
+				strValue = "(local)"
+			else
+				strValue = ".\" & strValue
+			end if
+			objOption.Text = strValue
+			objOption.Value = strValue
+			
+			if d.Exists(strValue) = false then
+				if selInstances.Contains(objOption) = false then
+					selInstances.Add(objOption)
+				end if
+				d.Add strValue,strValue
+			end if
+		Next
+	End Sub
+	
+	' Prompt user to select backup file
+	Sub SelectBackupFile()
+		Dim oDLG
+		Set oDLG=CreateObject("MSComDlg.CommonDialog") 
+		With oDLG
+			.DialogTitle="Open"
+			.Filter="Backup Files|*.bak|All files|*.*"
+			.MaxFileSize=255
+			.Flags=.Flags Or &H1000	'FileMustExist (OFN_FILEMUSTEXIST)
+			.ShowOpen
+			If .FileName<>"" Then
+				txtFileName.Value =.FileName
+			End If
+		End With
+		Set oDLG=Nothing
+	End Sub
+	
+	' Prompt user for location of database restore
+	Sub SelectRestoreFolder()
+		Const MY_COMPUTER = &H11&
+		Const WINDOW_HANDLE = 0
+		Const OPTIONS = 0
+		Dim objShell,objFolder,objFolderItem,strPath
+
+		Set objShell = CreateObject("Shell.Application")
+		Set objFolder = objShell.Namespace(MY_COMPUTER)
+		Set objFolderItem = objFolder.Self
+		strPath = objFolderItem.Path
+
+		Set objShell = CreateObject("Shell.Application")
+		Set objFolder = objShell.BrowseForFolder _
+				(WINDOW_HANDLE, "Select a folder:", OPTIONS, strPath) 
+			      
+		If not objFolder Is Nothing Then
+			Set objFolderItem = objFolder.Self
+			txtRestoreFolder.Value = objFolderItem.Path
+		End If
+
+	End Sub
+	
+	' Show/Hide username/password textbox depending on integrated security option
+	Sub ShowAuth()
+		if chkIntegrated.Checked = true then
+			trUserName.Style.Display = "none"
+			trPassword

@@ -1,0 +1,15 @@
+$strComputer = "."
+$objWMIService = GetObject("winmgmts:\\"+ $strComputer + "\root\cimv2")
+$colItems = $objWMIService.ExecQuery("Select * from Win32_Share")
+For Each $objItem in $colItems
+    ? "Access Mask:" + $objItem.AccessMask
+    ? "Allow Maximum:" + $objItem.AllowMaximum
+    ? "Caption:" + $objItem.Caption
+    ? "Description:" + $objItem.Description
+    ? "Install Date:" + $objItem.InstallDate
+    ? "Maximum Allowed:" + $objItem.MaximumAllowed
+    ? "Name:" + $objItem.Name
+    ? "Path:" + $objItem.Path
+    ? "Status:" + $objItem.Status
+    ? "Type:" + $objItem.Type
+Next

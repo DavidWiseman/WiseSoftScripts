@@ -1,0 +1,59 @@
+$strComputer = "."
+$objWMIService = GetObject("winmgmts:\\"+ $strComputer + "\root\cimv2")
+$colItems = $objWMIService.ExecQuery("Select * from Win32_CDROMDrive")
+For Each $objItem in $colItems
+    ? "Availability:" + $objItem.Availability
+    For Each $x in $objItem.Capabilities
+        ? "Capabilities:" + $x
+    Next
+    For Each $x in $objItem.CapabilityDescriptions
+        ? "Capability Descriptions:" + $x
+    Next
+    ? "Caption:" + $objItem.Caption
+    ? "Compression Method:" + $objItem.CompressionMethod
+    ? "Config Manager Error Code:" + $objItem.ConfigManagerErrorCode
+    ? "Config Manager User Config:" + $objItem.ConfigManagerUserConfig
+    ? "Creation Class Name:" + $objItem.CreationClassName
+    ? "Default Block Size:" + $objItem.DefaultBlockSize
+    ? "Description:" + $objItem.Description
+    ? "Device ID:" + $objItem.DeviceID
+    ? "Drive:" + $objItem.Drive
+    ? "Drive Integrity:" + $objItem.DriveIntegrity
+    ? "Error Cleared:" + $objItem.ErrorCleared
+    ? "Error Description:" + $objItem.ErrorDescription
+    ? "Error Methodology:" + $objItem.ErrorMethodology
+    ? "File System Flags:" + $objItem.FileSystemFlags
+    ? "File System Flags Ex:" + $objItem.FileSystemFlagsEx
+    ? "Id:" + $objItem.Id
+    ? "Install Date:" + $objItem.InstallDate
+    ? "Last Error Code:" + $objItem.LastErrorCode
+    ? "Manufacturer:" + $objItem.Manufacturer
+    ? "Max Block Size:" + $objItem.MaxBlockSize
+    ? "Maximum Component Length:" + $objItem.MaximumComponentLength
+    ? "Max Media Size:" + $objItem.MaxMediaSize
+    ? "Media Loaded:" + $objItem.MediaLoaded
+    ? "Media Type:" + $objItem.MediaType
+    ? "Mfr Assigned Revision Level:" + $objItem.MfrAssignedRevisionLevel
+    ? "Min Block Size:" + $objItem.MinBlockSize
+    ? "Name:" + $objItem.Name
+    ? "Needs Cleaning:" + $objItem.NeedsCleaning
+    ? "Number Of Media Supported:" + $objItem.NumberOfMediaSupported
+    ? "PNP Device ID:" + $objItem.PNPDeviceID
+    For Each $x in $objItem.PowerManagementCapabilities
+        ? "Power Management Capabilities:" + $x
+    Next
+    ? "Power Management Supported:" + $objItem.PowerManagementSupported
+    ? "Revision Level:" + $objItem.RevisionLevel
+    ? "SCSI Bus:" + $objItem.SCSIBus
+    ? "SCSI Logical Unit:" + $objItem.SCSILogicalUnit
+    ? "SCSI Port:" + $objItem.SCSIPort
+    ? "SCSI Target Id:" + $objItem.SCSITargetId
+    ? "Size:" + $objItem.Size
+    ? "Status:" + $objItem.Status
+    ? "Status Info:" + $objItem.StatusInfo
+    ? "System Creation Class Name:" + $objItem.SystemCreationClassName
+    ? "System Name:" + $objItem.SystemName
+    ? "Transfer Rate:" + $objItem.TransferRate
+    ? "Volume Name:" + $objItem.VolumeName
+    ? "Volume Serial Number:" + $objItem.VolumeSerialNumber
+Next

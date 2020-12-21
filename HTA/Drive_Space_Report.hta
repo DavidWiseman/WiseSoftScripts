@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<head>
+    <title>WiseSoft Drive Space Report</title>
+    <hta:application applicationname="WiseSoft Drive Space Report" scroll="yes" singleinstance="yes"
+        windowstate="normal">
+<style type="text/css">
+    body
+    {
+        background-color: #F2F2F2;
+        font: bold 10pt arial,sans-serif;
+        color:#787878;
+        margin:0px;
+    }
+    table
+    {
+        width: 400;
+        border: 2px solid;
+        border-collapse: collapse;
+        border-color: #696969;
+    }
+    th
+    {
+        border: 1px dotted #111111;
+        border-color: #787878;
+        color: #FFFFFF;
+        font: bold 12pt arial,sans-serif;
+        background-color: #787878;
+        text-align: left;
+    }
+    td
+    {
+        border: 1px dotted #111111;
+        border-color: #787878;
+        font: bold 10pt arial,sans-serif;
+        color: #787878;
+    }
+    .neutral
+    {
+        background-color: #FFFFE0;
+        color: #787878;
+    }
+    .good
+    {
+        background-color: green;
+        color: white;
+    }
+    .warning
+    {
+        background-color: yellow;
+        color: black;
+    }
+    .critical
+    {
+        background-color: red;
+        color: black;
+    }
+    .tableHead td
+    {
+        padding: 5px;
+        font: bold 14pt arial,sans-serif;
+        background-color: #787878;
+        text-align: center;
+        color: white;
+    }
+    h1
+    {
+        background-color: #787878;
+        color: white;
+        font: bold 20pt arial,sans-serif;
+        text-align: center;
+    }
+</style>
+</head>
+
+<script language="VBScript">
+	Option Explicit
+    
+    ' ********** Constants **********
+    const bytesToMB = 1048576
+    const bytesToGB = 1073741824
+    const bytesToTB = 1099511627776
+	const warningLevel = 20 ' < 20% = warning (yellow)
+	const criticalLevel = 10 ' < 10% = critical (red)
+	const goodLevel = 50 ' > 50% = good (green)
+	' **********************************
+
+	sub GetDriveReportsHTML
+		dim html, strComputer,strComputers
+		
+		strComputers = txtComputers.value
+		
+		for each strComputer in SPLIT(strComputers,chr(13))
+		    strComputer = TRIM(REPLACE(strComputer,chr(10),""))
+		    if strComputer <> "" then
+			    html = html & GetDriveReportHTML(strComputer)
+			end if
+		next
+		report.InnerHTML = html
+	end sub
+
+    function ConvertToDiskUnit(byval value) 
+        IF (value/bytesToTb) > 1 THEN
+            ConvertToDiskUnit = round(value / bytesToTB,1) & " TB"
+        ELSEIF (value/bytesToGb) > 1 THEN
+            ConvertToDiskUnit = round(value / bytesToGB,1) & " GB"
+        ELSE
+            ConvertToDiskUnit = round(value / bytesToMB,1) & " MB"
+        END IF
+    end function
+
+	function GetDriveReportHTML(byval strComputer)
+
+		Dim objWMIService, objItem, colItems
+		Dim strDriveType, strDiskSize, htmlDriveReport
+
+		ON ERROR RESUME NEXT
+		Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\cimv2")
+		IF Err.Number <> 0 THEN
+			GetDriveReportHTML = "<span class=""critical"">Error connecting to '" & strComputer & "'</span><br/><br/>"
+			Err.Clear
+			ON ERROR GOTO 0
+			EXIT FUNCTION
+		END IF
+
+		ON ERROR GOTO 0
+		Set colItems = objWMIService.ExecQuery("Select * from Win32_LogicalDisk WHERE DriveType=3")
+
+		htmlDriveReport = "<table><tr class=""tableHead""><td colspan=""5"">" & strComputer & _
+				"</td></tr><tr><th>Drive</th><th>Size</th><th>Used</th><th>Free</th><th>Free(%)</th></tr>"
+
+		For Each objItem in colItems
+	
+			DIM pctFreeSpace,strFreeSpace,strusedSpace, cssClass
+			pctFreeSpace = round(((objItem.FreeSpace / objItem.Size) * 100),1)
+			strDiskSize = ConvertToDiskUnit(objItem.Size) 
+			strFreeSpace = ConvertToDiskUnit(objItem.FreeSpace)
+			strUsedSpace = ConvertToDiskUnit(objItem.Size-objItem.FreeSpace)
+
+			IF pctFreeSpace < criticalLevel THEN
+				cssClass = "critical"
+			ELSEIF pctFreeSpace < warningLevel THEN
+				cs

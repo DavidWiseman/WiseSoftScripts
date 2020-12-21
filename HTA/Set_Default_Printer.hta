@@ -1,0 +1,138 @@
+<html>
+<!--********************************************************************
+'*
+'*  File:           Set Default Printer.hta
+'*  Created:        March 2009
+'*
+'********************************************************************-->
+<head>
+<HTA:APPLICATION
+     ID="oSDPHTA"
+     APPLICATIONNAME="SetDefaultPrinter"
+     SCROLL="no"
+     BORDER="normal"
+     SINGLEINSTANCE="yes"
+     CONTEXTMENU="no"
+     SHOWINTASKBAR="yes"
+     SYSMENU="yes"
+     VERSION="1.0" />
+<title>Set Default Printer</title>
+<meta http-equiv="Content-Script-Type" content="text/vbscript" />
+<style>
+BODY
+{
+  MARGIN: 0px;
+  BACKGROUND-COLOR: #d4d0c8;
+  FONT-FAMILY: arial;
+  FONT-SIZE: 8pt
+}
+BUTTON.menu
+{
+  HEIGHT: 30px;
+  WIDTH: 150px;
+  COLOR: #000000;
+  FONT-FAMILY: helvetica,sans-serif;
+  FONT-SIZE: 10pt;
+  FONT-WEIGHT: bold;
+  BACKGROUND-COLOR: #d4d0c8
+}
+</style>
+<script type="text/vbscript">
+
+'****************************************************************
+' Window_Onload Subroutine
+' ------------------------
+' Purpose: Automatically runs when app loads.
+' Note:    Content of subroutine EnumPrinters was originally in
+'          this sub. However, ResizeTo caused script error on faster
+'          computers because HTA form not fully loaded before this
+'          sub is triggered. SetTimeout in this sub gives 100 ms
+'          delay before calling EnumPrinters so form will be loaded
+'          before attempting to change its properties.
+'
+'****************************************************************
+Sub Window_Onload
+
+  Window.SetTimeout "EnumPrinters", 100
+
+End Sub
+
+
+'****************************************************************
+' EnumPrinters Subroutine
+' -----------------------
+' Purpose: Enumerates all printers and populates a list box so
+'          user can select printer to make default.
+'
+'****************************************************************
+Sub EnumPrinters
+
+  self.ResizeTo 500,350
+  self.moveto 200,150
+
+  strComputer = "."
+  Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\cimv2")
+  Set colPrinters = objWMIService.ExecQuery("Select * From Win32_Printer")
+
+  '* Remove all existing options in the select list. Should only be the
+  '* "Please Wait" message that is select box option 1.
+
+  For Each objOption in AvailablePrinters.Options
+    objOption.RemoveNode
+  Next
+
+  '* Populate select list with all printers with default printer selected.
+
+  blnHasDefPrt = False
+  blnIsDefPrt = False
+
+  For Each objPrinter in colPrinters
+    strPrinter = objPrinter.Name
+    If objPrinter.Default = True Then
+      strDefPrt = """" & " " & strPrinter & " " & """"
+      blnHasDefPrt = True
+      blnIsDefPrt = True
+    End If
+    Set objOption = Document.createElement("OPTION")
+    objOption.Text = strprinter
+    objOption.Value = strPrinter
+    If blnIsDefPrt = True Then
+      objOption.Selected = "Selected"
+      blnIsDefPrt = False
+    End If
+    AvailablePrinters.Add(objOption)
+  Next
+
+  Set objWMIService = nothing
+  Set colPrinters = nothing
+  Set objPrinter = nothing
+  Set objOption = nothing
+
+  If blnHasDefPrt = True Then
+    strMsgTitle = "Your Current Default Printer"
+    strMsgPrompt = UCase(strDefPrt)
+    MsgBox strMsgPrompt, vbInformation + vbOKOnly, strMsgTitle
+  End If
+End Sub
+
+
+'****************************************************************
+' EndApp Subroutine
+' -----------------
+' Purpose: Ends app execution and closes window.
+'****************************************************************
+Sub EndApp
+  window.self.close()
+End Sub
+
+
+'****************************************************************
+' SetDefault Subroutine
+' ---------------------
+' Purpose: Sets the selected printer to the default.
+'
+'****************************************************************
+Sub SetDefault
+  strPrinter = AvailablePrinters.Value
+  Set WshNetwork = CreateObject("Wscript.Network")
+  WshNetwo

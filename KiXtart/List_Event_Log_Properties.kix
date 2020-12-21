@@ -1,0 +1,46 @@
+$strComputer = "."
+$objWMIService = GetObject("winmgmts:\\"+ $strComputer + "\root\cimv2")
+$colItems = $objWMIService.ExecQuery("Select * from Win32_NTEventlogFile")
+For Each $objItem in $colItems
+    ? "AccessMask:" + $objItem.AccessMask
+    ? "Archive:" + $objItem.Archive
+    ? "Caption:" + $objItem.Caption
+    ? "Compressed:" + $objItem.Compressed
+    ? "Compression Method:" + $objItem.CompressionMethod
+    ? "Creation Class Name:" + $objItem.CreationClassName
+    ? "Creation Date:" + $objItem.CreationDate
+    ? "CS Creation Class Name:" + $objItem.CSCreationClassName
+    ? "CS Name:" + $objItem.CSName
+    ? "Description:" + $objItem.Description
+    ? "Drive:" + $objItem.Drive
+    ? "Eight Dot Three File Name:" + $objItem.EightDotThreeFileName
+    ? "Encrypted:" + $objItem.Encrypted
+    ? "Encryption Method:" + $objItem.EncryptionMethod
+    ? "Extension:" + $objItem.Extension
+    ? "FileName:" + $objItem.FileName
+    ? "File Size:" + $objItem.FileSize
+    ? "File Type:" + $objItem.FileType
+    ? "FS Creation Class Name:" + $objItem.FSCreationClassName
+    ? "FS Name:" + $objItem.FSName
+    ? "Hidden:" + $objItem.Hidden
+    ? "Install Date:" + $objItem.InstallDate
+    ? "In Use Count:" + $objItem.InUseCount
+    ? "Last Accessed:" + $objItem.LastAccessed
+    ? "Last Modified:" + $objItem.LastModified
+    ? "Logfile Name:" + $objItem.LogfileName
+    ? "Manufacturer:" + $objItem.Manufacturer
+    ? "Max File Size:" + $objItem.MaxFileSize
+    ? "Name:" + $objItem.Name
+    ? "Number Of Records:" + $objItem.NumberOfRecords
+    ? "Overwrite OutDated:" + $objItem.OverwriteOutDated
+    ? "OverWrite Policy:" + $objItem.OverWritePolicy
+    ? "Path:" + $objItem.Path
+    ? "Readable:" + $objItem.Readable
+    For Each $x in $objItem.Sources
+        ? "Sources:" + $x
+    Next
+    ? "Status:" + $objItem.Status
+    ? "System:" + $objItem.System
+    ? "Version:" + $objItem.Version
+    ? "Writeable:" + $objItem.Writeable
+Next

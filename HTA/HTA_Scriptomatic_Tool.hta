@@ -1,0 +1,82 @@
+<head>
+<title>HTA Test</title>
+<HTA:APPLICATION 
+     APPLICATIONNAME="HTA Test"
+     SCROLL="yes"
+     SINGLEINSTANCE="yes"
+     WINDOWSTATE="normal"
+>
+</head>
+
+<script language="VBScript">
+Sub FillClassDropDown
+
+   Set objWMIService = GetObject("winmgmts:{impersonationLevel=impersonate}root\cimv2")
+   Set colClasses = objWMIService.SubClassesOf
+   
+   For Each objClass In colClasses
+      If Left(objClass.Path_.Class,6) = "Win32_" Then
+         Set objNewOption = document.createElement("OPTION")
+         objNewOption.Text = objClass.Path_.Class
+         WMIClasses.options.Add(objNewOption)
+      End If
+   Next
+
+ 
+End Sub
+
+Sub HandleClassChange
+   For Each objOption In WMIClasses.Options
+      If objOption.Selected = True Then
+      strClass = objOption.Text
+      Set objWMIService = GetObject("winmgmts:{impersonationLevel=impersonate}root\cimv2")
+      Set objClass = objWMIService.Get(strClass)
+
+      For Each objProperty In objClass.Properties_
+          strProperties = strProperties & objProperty.Name & vbCrLf
+      Next
+   
+      For Each objMethod In objClass.Methods_
+         strMethods = strMethods & objMethod.Name & vbCrLf
+      Next
+
+      Properties.Value = strProperties
+      Methods.Value    = strMethods
+      End If
+   Next
+End Sub
+
+Sub ShowCode
+For Each objOption In WMIClasses.Options
+      If objOption.Selected = True Then
+     strClass = objOption.Text
+  End If
+Next
+
+Set objWMIService = GetObject("winmgmts:{impersonationLevel=impersonate}root\cimv2")
+Set objClass = objWMIService.Get(strClass)
+
+strCode = strCode & "Set objWMIService = GetObject(""winmgmts:"")" & vbCrLf
+strCode = strCode & "Set colInstances = objWMIService.ExecQuery" & _
+    "(""SELECT * FROM " & strClass & """)" & vbCrLf
+strCode = strCode & "For Each objInstance In colInstances" & vbCrLf
+
+For Each objProperty In objClass.Properties_
+   strCode = strCode & "   WScript.Echo objInstance." & objProperty.Name & vbCrLf
+Next
+
+strCode = strCode & "Next" 
+Code.Value = strCode
+End Sub
+
+</script>
+
+<body onLoad=FillClassDropDown>
+<select onChange=HandleClassChange name="WMIClasses"></select><p> 
+<input onClick=ShowCode type="submit" value="Show Code"></input><p>
+<textarea name="Properties" rows="5" cols="45"></textarea>
+<textarea name="Methods" rows="5" cols="45"></textarea>
+<textarea name="Code" rows="30" cols="93"></textarea>
+</body>
+</html>
+

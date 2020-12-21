@@ -1,0 +1,29 @@
+$strComputer = "."
+$objWMIService = GetObject("winmgmts:\\"+ $strComputer + "\root\cimv2")
+$colItems = $objWMIService.ExecQuery("Select * from Win32_PrinterDriver")
+For Each $objItem in $colItems
+    ? "Caption:" + $objItem.Caption
+    ? "Config File:" + $objItem.ConfigFile
+    ? "Creation Class Name:" + $objItem.CreationClassName
+    ? "DataFile:" + $objItem.DataFile
+    ? "Default Data Type:" + $objItem.DefaultDataType
+    For Each $x in $objItem.DependentFiles
+        ? "Dependent Files:" + $x
+    Next
+    ? "Description:" + $objItem.Description
+    ? "Driver Path:" + $objItem.DriverPath
+    ? "File Path:" + $objItem.FilePath
+    ? "Help File:" + $objItem.HelpFile
+    ? "Inf Name:" + $objItem.InfName
+    ? "Install Date:" + $objItem.InstallDate
+    ? "Monitor Name:" + $objItem.MonitorName
+    ? "Name:" + $objItem.Name
+    ? "OEM Url:" + $objItem.OEMUrl
+    ? "Started:" + $objItem.Started
+    ? "Start Mode:" + $objItem.StartMode
+    ? "Status:" + $objItem.Status
+    ? "Supported Platform:" + $objItem.SupportedPlatform
+    ? "System Creation Class Name:" + $objItem.SystemCreationClassName
+    ? "System Name:" + $objItem.SystemName
+    ? "Version:" + $objItem.Version
+Next

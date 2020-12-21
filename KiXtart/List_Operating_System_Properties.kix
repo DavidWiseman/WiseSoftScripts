@@ -1,0 +1,62 @@
+$strComputer = "."
+$objWMIService = GetObject("winmgmts:\\"+ $strComputer + "\root\cimv2")
+$colItems = $objWMIService.ExecQuery("Select * from Win32_OperatingSystem")
+For Each $objItem in $colItems
+    ? "Boot Device:" + $objItem.BootDevice
+    ? "Build Number:" + $objItem.BuildNumber
+    ? "Build Type:" + $objItem.BuildType
+    ? "Caption:" + $objItem.Caption
+    ? "Code Set:" + $objItem.CodeSet
+    ? "Country Code:" + $objItem.CountryCode
+    ? "Creation Class Name:" + $objItem.CreationClassName
+    ? "CS Creation Class Name:" + $objItem.CSCreationClassName
+    ? "CSD Version:" + $objItem.CSDVersion
+    ? "CS Name:" + $objItem.CSName
+    ? "Current Time Zone:" + $objItem.CurrentTimeZone
+    ? "Debug:" + $objItem.Debug
+    ? "Description:" + $objItem.Description
+    ? "Distributed:" + $objItem.Distributed
+    ? "Encryption Level:" + $objItem.EncryptionLevel
+    ? "Foreground Application Boost:" + $objItem.ForegroundApplicationBoost
+    ? "Free Physical Memory:" + $objItem.FreePhysicalMemory
+    ? "Free Space In Paging Files:" + $objItem.FreeSpaceInPagingFiles
+    ? "Free Virtual Memory:" + $objItem.FreeVirtualMemory
+    ? "Install Date:" + $objItem.InstallDate
+    ? "Large System Cache:" + $objItem.LargeSystemCache
+    ? "Last BootUp Time:" + $objItem.LastBootUpTime
+    ? "Loca lDate Time:" + $objItem.LocalDateTime
+    ? "Locale:" + $objItem.Locale
+    ? "Manufacturer:" + $objItem.Manufacturer
+    ? "Max Number Of Processes:" + $objItem.MaxNumberOfProcesses
+    ? "Max Process Memory Size:" + $objItem.MaxProcessMemorySize
+    ? "Name:" + $objItem.Name
+    ? "Number Of Licensed Users:" + $objItem.NumberOfLicensedUsers
+    ? "Number Of Processes:" + $objItem.NumberOfProcesses
+    ? "Number Of Users:" + $objItem.NumberOfUsers
+    ? "Organization:" + $objItem.Organization
+    ? "OS Language:" + $objItem.OSLanguage
+    ? "OS Product Suite:" + $objItem.OSProductSuite
+    ? "OS Type:" + $objItem.OSType
+    ? "Other Type Description:" + $objItem.OtherTypeDescription
+    ? "Plus Product ID:" + $objItem.PlusProductID
+    ? "Plus Version Number:" + $objItem.PlusVersionNumber
+    ? "Primary:" + $objItem.Primary
+    ? "Product Type:" + $objItem.ProductType
+    ? "Quantum Length:" + $objItem.QuantumLength
+    ? "Quantum Type:" + $objItem.QuantumType
+    ? "Registered User:" + $objItem.RegisteredUser
+    ? "Serial Number:" + $objItem.SerialNumber
+    ? "Service Pack Major Version:" + $objItem.ServicePackMajorVersion
+    ? "Service Pack Minor Version:" + $objItem.ServicePackMinorVersion
+    ? "Size Stored In Paging Files:" + $objItem.SizeStoredInPagingFiles
+    ? "Status:" + $objItem.Status
+    ? "Suite Mask:" + $objItem.SuiteMask
+    ? "System Device:" + $objItem.SystemDevice
+    ? "System Directory:" + $objItem.SystemDirectory
+    ? "System Drive:" + $objItem.SystemDrive
+    ? "Total Swap Space Size:" + $objItem.TotalSwapSpaceSize
+    ? "Total Virtual Memory Size:" + $objItem.TotalVirtualMemorySize
+    ? "Total Visible Memory Size:" + $objItem.TotalVisibleMemorySize
+    ? "Version:" + $objItem.Version
+    ? "Windows Directory:" + $objItem.WindowsDirectory
+Next
